@@ -89,8 +89,7 @@ layout = [
     [sg.Button(button_text="add", key="add", size=(10, 1), visible=True)],
     [sg.Text("Save Location: "),
      sg.Input(key="save_location"),
-     sg.FileSaveAs(file_types="*.npy"),
-     sg.Button("save")],
+     sg.Button("Save")],
 
     [sg.Text("feedback", key="feedback", text_color="black", visible=False)],
 ]
