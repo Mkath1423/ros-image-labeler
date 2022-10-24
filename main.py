@@ -16,7 +16,7 @@ import pickle
 
 from sensor_msgs.msg import Image
 
-# -------------------- COSNTANTS --------------------#
+# -------------------- CONSTANTS --------------------#
 
 # rostopic for the camera feed
 camera_feed_topic = "/camera/color/image_raw"
@@ -140,6 +140,8 @@ window.finalize()
 
 # -------------------- DATASET --------------------#
 
+# schema is list of dicts
+# [ {'img1': array(), 'img2': array(), 'loc_1': (123,456), 'loc_2':(789,101) }, {...} ]
 dataset = []
 
 if os.path.exists(load_from_file):
@@ -171,9 +173,9 @@ def live_camera_feed(data: Image):
 
 
 rospy.init_node("imagelabeler", anonymous=True)
-rospy.Subscriber(camera_feed_topic, Image, live_camera_feed)
+rospy.Subscriber(camera_feed_topic, Image, live_camera_feed, queue_size=1, buff_size=10000000)  # My condolences to your RAM, but this killed all the latency.
 
-# ----------------- EVENT HANDLEING -----------------#
+# ----------------- EVENT HANDLING -----------------#
 
 while True:
     event, values = window.read()
