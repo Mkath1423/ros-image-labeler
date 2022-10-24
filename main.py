@@ -141,7 +141,7 @@ window.finalize()
 # -------------------- DATASET --------------------#
 
 # schema is list of dicts
-# [ {'img1': array(), 'img2': array(), 'loc_1': (123,456), 'loc_2':(789,101) }, {...} ]
+# [ {'img1': array(), 'img2': array(), 'loc_1': (123,456), 'loc_2':(789,101), 'coords':"ij" }, {...} ]
 dataset = []
 
 if os.path.exists(load_from_file):
@@ -153,7 +153,7 @@ if os.path.exists(load_from_file):
 
 def add_dataset_element(img1, img2, loc_1, loc_2):
     global dataset
-    dataset.append({"img1": img1, "img2": img2, "loc_1": loc_1, "loc_2": loc_2})
+    dataset.append({"img1": img1, "img2": img2, "loc_1": loc_1, "loc_2": loc_2, 'coords':"ij"})
 
 
 # -------------------- IMAGE FEED --------------------#
