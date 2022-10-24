@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os.path
 
 import PySimpleGUI as sg
@@ -11,23 +12,25 @@ import numpy
 import rospy
 import sensor_msgs
 
+import pickle
+
 from sensor_msgs.msg import Image
 
 # -------------------- COSNTANTS --------------------#
 
 # rostopic for the camera feed
-camera_feed_topic = ""  # TODO ADD TOPIC
+camera_feed_topic = "/camera/color/image_raw"
 
 # color of the location indicator
 dot_color = "red"
 
-# for resizing images, width takes president over height
+# for resizing images, width takes precedent over height
 target_w = 400
 target_h = 400
 
 # give a valid file path to continue adding to an existing file
-load_from_file = ""
-
+load_from_file = "" # "~/test/things.pkl"
+load_from_file = os.path.expanduser(load_from_file)
 
 # -------------------- UTILITIES --------------------#
 
@@ -140,11 +143,14 @@ window.finalize()
 dataset = []
 
 if os.path.exists(load_from_file):
-    dataset = list(np.load(load_from_file, allow_pickle=True))
+    with open(load_from_file, 'rb') as pf:
+        dataset = pickle.load(pf)
+    # dataset = list(np.load(load_from_file, allow_pickle=True))
     print(f"loaded {len(dataset)} images from file")
 
 
 def add_dataset_element(img1, img2, loc_1, loc_2):
+    global dataset
     dataset.append({"img1": img1, "img2": img2, "loc_1": loc_1, "loc_2": loc_2})
 
 
@@ -164,7 +170,7 @@ def live_camera_feed(data: Image):
     live.update(data=data)
 
 
-rospy.init_node("image-labeler", anonymous=True)
+rospy.init_node("imagelabeler", anonymous=True)
 rospy.Subscriber(camera_feed_topic, Image, live_camera_feed)
 
 # ----------------- EVENT HANDLEING -----------------#
@@ -215,9 +221,12 @@ while True:
     # saving
     elif event == "save":
         path = window["save_location"].get()
+        path = os.path.expanduser(path)
 
         if path != "" and (os.path.dirname(path) == "" or os.path.isdir(os.path.dirname(path))):
-            np.save(path, dataset)
+            # np.save(path, dataset)
+            with open(path, 'wb') as pf:
+                pickle.dump(dataset, pf)
             print(f"saved {len(dataset)} items to {path}")
 
         else:
