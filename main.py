@@ -153,7 +153,7 @@ if os.path.exists(load_from_file):
 
 def add_dataset_element(img1, img2, loc_1, loc_2):
     global dataset
-    dataset.append({"img1": img1, "img2": img2, "loc_1": loc_1, "loc_2": loc_2, 'coords':"ij"})
+    dataset.append({"img1": img1, "img2": img2, "loc_1": loc_1, "loc_2": loc_2, 'coords':"xy"})
 
 
 # -------------------- IMAGE FEED --------------------#
